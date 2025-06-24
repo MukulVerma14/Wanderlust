@@ -1,3 +1,7 @@
+if(process.env.NODE_ENV != "production") {
+    require('dotenv').config()
+}
+
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
@@ -10,12 +14,21 @@ const flash = require("connect-flash");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const User = require("./models/user.js");
+const cloudinary = require('cloudinary').v2;
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
 
 const listings = require("./routes/listing.js");
 const reviews = require("./routes/review.js");
 const user = require("./routes/user.js");
 
 const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
+
+
+cloudinary.config({
+    cloud_name : process.env.CLOUD_NAME,
+    api_key : process.env.CLOUD_API_KEY,
+    api_secret : process.env.CLOUD_API_SECRET,
+});
 
 main().then(() => {
     console.log("connected to DB");
